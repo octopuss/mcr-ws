@@ -1,0 +1,139 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://octopuss.sk/moro/mcrws/ws"
+           targetNamespace="http://octopuss.sk/moro/mcrws/ws" elementFormDefault="qualified">
+
+    <xs:element name="getCardInfoRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="pan" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getCardInfoResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="cardInfo" type="tns:cardInfo"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="redemptionRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="panToken" type="xs:string"/>
+                <xs:element name="userAccountId" type="xs:long"/>
+                <xs:element name="redeemAmount" type="xs:decimal"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="redemptionResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="redeemedAmmount" type="xs:decimal"/>
+                <xs:element name="redemptionFee" type="xs:decimal" />
+                <xs:element name="total" type="xs:decimal"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getTransactionHistoryRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dateFrom" type="xs:dateTime"/>
+                <xs:element name="dateTo" type="xs:dateTime" />
+                <xs:element name="userAccountId" type="xs:long" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getTransactionHistoryResponse">
+       <xs:complexType>
+           <xs:sequence>
+               <xs:element name="transactions" type="tns:transaction" maxOccurs="unbounded"/>
+           </xs:sequence>
+       </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="transaction">
+        <xs:sequence>
+            <xs:element name="txTime" type="xs:dateTime" />
+            <xs:element name="amount" type="xs:decimal" />
+            <xs:element name="txType" type="tns:transactionType" />
+            <xs:element name="txStatus" type="tns:transactionState" />
+            <xs:element name="currency" type="tns:currency" />
+            <xs:element name="merchantName" type="xs:string" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="cardInfo">
+        <xs:sequence>
+            <xs:element name="panToken" type="xs:string"/>
+            <xs:element name="partnerBankCard" type="xs:boolean"/>
+            <xs:element name="cardStatus" type="tns:cardState"/>
+            <xs:element name="cardVerificationStatus" type="tns:cardVerificationState" />
+            <xs:element name="userAccount" type="tns:userAccount"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="userAccount">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="username" type="xs:string" />
+            <xs:element name="total" type="xs:decimal" />
+            <xs:element name="currency" type="tns:currency"/>
+            <xs:element name="redemptionType" type="tns:redemptionType" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="currency">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="CZK"/>
+            <xs:enumeration value="EUR"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="transactionState">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="OK"/>
+            <xs:enumeration value="PENDING"/>
+            <xs:enumeration value="DECLINED"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="transactionType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="CARD_TO_CARD"/>
+            <xs:enumeration value="PURCHASE"/>
+            <xs:enumeration value="REFUND"/>
+            <xs:enumeration value="ACCOUNT_CREDIT"/>
+            <xs:enumeration value="FOREFEIT"/>
+            <xs:enumeration value="FEE"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="redemptionType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="NONE"/>
+            <xs:enumeration value="AMOUNT_REACHED"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="cardState">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ACTIVE"/>
+            <xs:enumeration value="INACTIVE"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="cardVerificationState">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="VERIFIED"/>
+            <xs:enumeration value="VERIFIED_WAITING"/>
+            <xs:enumeration value="UNVERIFIED"/>
+            <xs:enumeration value="WAITING_FOR_TRANSACTION" />
+        </xs:restriction>
+    </xs:simpleType>
+
+
+</xs:schema>
